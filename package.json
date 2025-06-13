@@ -1,0 +1,66 @@
+{
+  "name": "ondc-comprehensive-mcp-server",
+  "version": "2.0.0",
+  "description": "Comprehensive Model Context Protocol server for ONDC (Open Network for Digital Commerce) APIs with complete Beckn protocol compliance",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsx src/index.ts",
+    "watch": "tsx watch src/index.ts",
+    "test": "npm run build && node build/index.js --test",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": [
+    "mcp",
+    "ondc",
+    "beckn",
+    "protocol",
+    "api",
+    "e-commerce",
+    "digital-commerce",
+    "open-network",
+    "registry",
+    "logistics",
+    "mobility",
+    "financial-services",
+    "model-context-protocol"
+  ],
+  "author": "ONDC Community (Unofficial)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial/issues"
+  },
+  "homepage": "https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "ondc-mcp-server": "./build/index.js"
+  },
+  "files": [
+    "build/",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ]
+}
