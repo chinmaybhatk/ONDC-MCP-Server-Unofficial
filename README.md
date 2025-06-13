@@ -25,6 +25,51 @@ npm install && npm run build
 
 📖 **[Complete Setup Guide →](USAGE_GUIDE.md)**
 
+## 🎯 BAP and BPP Support
+
+This MCP server now supports both **BAP (Buyer Application Platform)** and **BPP (Buyer-side Platform Provider)** implementations:
+
+### 🛒 BAP Features (Buyer Applications)
+- Product discovery across ONDC network
+- Order management and tracking  
+- Payment processing integration
+- Multi-domain support (retail, food, mobility)
+- Real-time order status updates
+
+### 🏪 BPP Features (Seller Platforms) 
+- Catalog management and inventory sync
+- Order processing and fulfillment
+- Multi-location store management
+- Analytics and reporting tools
+- Webhook handling for BAP requests
+
+### 📚 Documentation
+- **[BAP/BPP Implementation Guide](docs/BAP_BPP_IMPLEMENTATION.md)** - Complete implementation details
+- **[Usage Examples](docs/USAGE_EXAMPLES.md)** - Practical usage scenarios
+
+### 🚀 Quick Start
+```bash
+# For BAP (Buyer App) setup
+cp templates/.env.bap.template .env
+
+# For BPP (Seller Platform) setup  
+cp templates/.env.bpp.template .env
+
+# Build and start
+npm install && npm run build && npm start
+```
+
+### 💬 Usage with Claude
+Once configured, use natural language with Claude:
+
+**BAP Examples:**
+- "Search for organic vegetables in Bangalore on ONDC network"
+- "Select 2kg apples from FreshMart and place order with UPI payment"
+
+**BPP Examples:**  
+- "Add organic tomatoes to my grocery catalog with price ₹80/kg"
+- "Update order ORD123 status to 'Out for delivery' with tracking info"
+
 ## 🌟 Features
 
 ### Complete API Coverage (25+ Endpoints)
