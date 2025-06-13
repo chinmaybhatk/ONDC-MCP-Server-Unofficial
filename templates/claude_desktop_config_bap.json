@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "ondc-bap": {
+      "command": "node",
+      "args": ["/absolute/path/to/ONDC-MCP-Server-Unofficial/build/index.js"],
+      "env": {
+        "NODE_ENV": "production",
+        "ONDC_PARTICIPANT_TYPE": "BAP",
+        "ONDC_ENVIRONMENT": "staging"
+      }
+    }
+  }
+}
