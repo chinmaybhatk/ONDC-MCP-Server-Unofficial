@@ -18,222 +18,224 @@ Thank you for your interest in contributing to the ONDC MCP Server! This documen
 ### Suggesting Features
 
 1. **Check existing feature requests** to avoid duplicates
-2. **Provide clear use cases** and business justification
-3. **Consider ONDC protocol compatibility**
-4. **Include mockups or examples** when applicable
+2. **Provide clear use cases** and justification
+3. **Consider ONDC protocol compliance** and official specifications
+4. **Discuss implementation approach** if you have ideas
 
 ### Code Contributions
 
 #### Prerequisites
 
 - Node.js 18+
-- TypeScript 5.0+
-- Git
-- Basic understanding of ONDC/Beckn protocol
-- Familiarity with Model Context Protocol (MCP)
+- Git knowledge
+- TypeScript familiarity
+- Understanding of ONDC/Beckn protocol basics
 
 #### Development Setup
 
 1. **Fork the repository**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/ONDC-MCP-Server-Unofficial.git
-   cd ONDC-MCP-Server-Unofficial
-   ```
+```bash
+git clone https://github.com/your-username/ONDC-MCP-Server-Unofficial.git
+cd ONDC-MCP-Server-Unofficial
+```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+```bash
+git checkout -b feature/your-feature-name
+```
 
 4. **Start development**
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
-#### Code Style Guidelines
+#### Code Standards
 
-- **TypeScript**: Use strict TypeScript with proper type definitions
-- **ESLint**: Follow the configured ESLint rules
-- **Prettier**: Use Prettier for code formatting
-- **Naming**: Use descriptive variable and function names
-- **Comments**: Add JSDoc comments for public APIs
+1. **TypeScript**: All code must be written in TypeScript
+2. **ESLint**: Follow the configured ESLint rules
+3. **Prettier**: Code must be formatted with Prettier
+4. **Comments**: Add JSDoc comments for public APIs
+5. **Error Handling**: Implement comprehensive error handling
 
-#### Testing
+#### API Guidelines
 
-- **Write tests** for new features and bug fixes
-- **Ensure all tests pass** before submitting PR
-- **Test with different ONDC environments** (staging/preprod)
-- **Validate API responses** match ONDC specifications
+1. **ONDC Compliance**: All APIs must follow ONDC/Beckn protocol specifications
+2. **Schema Validation**: Validate all input parameters
+3. **Error Messages**: Provide clear, actionable error messages
+4. **Authentication**: Implement proper Ed25519 signature authentication
+5. **Testing**: Add tests for new APIs (when test framework is available)
 
 #### Pull Request Process
 
-1. **Update documentation** if needed
-2. **Add/update tests** for your changes
-3. **Ensure code builds** without errors
-4. **Run linting and formatting**
-   ```bash
-   npm run lint
-   npm run format
+1. **Update Documentation**: Update README.md if needed
+2. **Test Your Changes**: Ensure all functionality works
+3. **Run Linting**: `npm run lint`
+4. **Format Code**: `npm run format`
+5. **Commit Convention**: Use conventional commits
    ```
-5. **Create descriptive PR title and description**
-6. **Reference related issues** using keywords (fixes #123)
+   feat: add new ONDC API endpoint
+   fix: resolve authentication issue
+   docs: update API documentation
+   chore: update dependencies
+   ```
 
-## 📝 Development Guidelines
+6. **Create Pull Request**:
+   - Use a descriptive title
+   - Explain the changes and motivation
+   - Reference any related issues
+   - Include testing instructions
 
-### API Implementation
+## 🧪 Testing Guidelines
 
-- **Follow ONDC/Beckn specifications** exactly
-- **Handle all error cases** gracefully
-- **Validate input parameters** thoroughly
-- **Use proper HTTP status codes**
-- **Include comprehensive error messages**
+### Manual Testing
+- Test with ONDC staging environment
+- Verify all API endpoints work correctly
+- Test error scenarios
+- Validate authentication flows
 
-### Security Considerations
+### Integration Testing
+- Test with Claude Desktop
+- Verify MCP protocol compliance
+- Test multi-API workflows
 
-- **Never commit private keys** or sensitive data
-- **Validate all user inputs**
-- **Follow authentication best practices**
-- **Use environment variables** for configuration
+## 📋 API Implementation Checklist
 
-### Code Organization
+When adding new ONDC APIs:
 
-```
-src/
-├── index.ts              # Main MCP server
-├── types/               # TypeScript type definitions
-├── utils/               # Utility functions
-├── apis/                # API handlers
-│   ├── registry/        # Registry APIs
-│   ├── transaction/     # Transaction APIs
-│   ├── callback/        # Callback APIs
-│   └── issue/          # Issue management APIs
-├── auth/               # Authentication utilities
-└── validation/         # Input validation schemas
-```
+- [ ] Follow ONDC protocol specifications exactly
+- [ ] Add proper TypeScript types
+- [ ] Implement input validation
+- [ ] Add comprehensive error handling
+- [ ] Include JSDoc documentation
+- [ ] Update the tools array
+- [ ] Add usage examples to README
+- [ ] Test with staging environment
 
-### Adding New APIs
+## 🔒 Security Guidelines
 
-1. **Research ONDC specifications** for the new API
-2. **Define TypeScript interfaces** for request/response
-3. **Create input validation schema**
-4. **Implement API handler**
-5. **Add comprehensive tests**
-6. **Update documentation**
+1. **Never commit credentials** or private keys
+2. **Use environment variables** for sensitive configuration
+3. **Validate all inputs** to prevent injection attacks
+4. **Follow ONDC security requirements** for signatures
+5. **Review dependencies** for security vulnerabilities
 
-Example structure for new API:
-
-```typescript
-// Define the tool schema
-const newAPITool: Tool = {
-  name: "ondc_new_api",
-  description: "Description of the new API",
-  inputSchema: {
-    type: "object",
-    properties: {
-      // Define parameters
-    },
-    required: ["param1", "param2"]
-  }
-};
-
-// Add handler in the switch statement
-case "ondc_new_api": {
-  // Implementation
-  break;
-}
-```
-
-## 📋 Project Standards
-
-### Commit Messages
-
-Use conventional commit format:
-```
-type(scope): description
-
-feat(api): add support for mobility domain
-fix(auth): resolve signature validation issue
-docs(readme): update installation instructions
-test(transaction): add tests for cancel API
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-### Versioning
-
-We follow [Semantic Versioning](https://semver.org/):
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
-
-### Documentation
-
-- **Update README.md** for user-facing changes
-- **Add JSDoc comments** for new functions
-- **Include API examples** in documentation
-- **Document configuration changes**
-
-## 🔍 Review Process
-
-### Code Review Checklist
-
-- [ ] Code follows project style guidelines
-- [ ] Tests are included and passing
-- [ ] Documentation is updated
-- [ ] No security vulnerabilities introduced
-- [ ] ONDC protocol compliance maintained
-- [ ] Performance impact considered
-- [ ] Error handling is comprehensive
-
-### Maintainer Guidelines
-
-- **Review within 48 hours** when possible
-- **Provide constructive feedback**
-- **Test changes thoroughly**
-- **Ensure backward compatibility**
-- **Update changelog** for releases
-
-## 🚀 Release Process
-
-1. **Update version** in package.json
-2. **Update CHANGELOG.md**
-3. **Create release branch**
-4. **Run full test suite**
-5. **Create GitHub release**
-6. **Publish to npm** (if applicable)
-
-## 📚 Resources
+## 📚 Resources for Contributors
 
 ### ONDC Documentation
 - [ONDC Developer Docs](https://github.com/ONDC-Official/developer-docs)
-- [Beckn Protocol Specs](https://developers.becknprotocol.io/)
-- [ONDC Protocol Specs](https://github.com/ONDC-Official/ONDC-Protocol-Specs)
+- [Protocol Specifications](https://github.com/ONDC-Official/ONDC-Protocol-Specs)
+- [Registry Onboarding Guide](https://github.com/ONDC-Official/developer-docs/blob/main/registry/Onboarding%20of%20Participants.md)
 
-### MCP Resources
-- [MCP Documentation](https://modelcontextprotocol.io)
-- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+### Beckn Protocol
+- [Beckn Core Specification](https://developers.becknprotocol.io/)
+- [API Reference](https://developers.becknprotocol.io/docs/core-specification/core-apis/)
 
-### Development Tools
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [ESLint Configuration](https://eslint.org/docs/user-guide/configuring/)
-- [Prettier Configuration](https://prettier.io/docs/en/configuration.html)
+### MCP Documentation
+- [MCP Protocol](https://modelcontextprotocol.io)
+- [TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+
+## 🏗️ Architecture Guidelines
+
+### Code Organization
+```
+src/
+├── index.ts              # Main server file
+├── types/               # TypeScript type definitions
+│   ├── ondc.ts         # ONDC-specific types
+│   └── mcp.ts          # MCP-specific types
+├── handlers/           # API request handlers
+│   ├── registry.ts     # Registry API handlers
+│   ├── transaction.ts  # Transaction API handlers
+│   └── callback.ts     # Callback API handlers
+├── utils/              # Utility functions
+│   ├── auth.ts        # Authentication utilities
+│   ├── validation.ts  # Input validation
+│   └── crypto.ts      # Cryptographic functions
+└── config/            # Configuration files
+    └── endpoints.ts   # ONDC endpoint configurations
+```
+
+### API Handler Pattern
+```typescript
+async function handleONDCAPI(
+  action: string,
+  args: any,
+  apiClient: ONDCAPIClient
+): Promise<MCPResponse> {
+  try {
+    // 1. Validate inputs
+    validateInput(args, schema);
+    
+    // 2. Create context
+    const context = createContext(action, args);
+    
+    // 3. Build message
+    const message = buildMessage(action, args);
+    
+    // 4. Make API call
+    const result = await apiClient.makeRequest(
+      `/${action}`, 
+      'POST', 
+      { context, message }
+    );
+    
+    // 5. Return formatted response
+    return formatResponse(result);
+  } catch (error) {
+    return handleError(error);
+  }
+}
+```
+
+## 🐛 Debugging
+
+### Common Issues
+1. **Authentication Failures**: Check key generation and signing
+2. **Network Errors**: Verify ONDC environment endpoints
+3. **Schema Validation**: Ensure request matches ONDC specs
+4. **MCP Integration**: Check Claude Desktop configuration
+
+### Debug Tools
+- Use `console.error()` for server-side debugging
+- Enable verbose logging in development
+- Test individual APIs with curl/Postman
+- Use ONDC registry lookup to verify configurations
+
+## 🎯 Priority Contributions
+
+We especially welcome contributions in these areas:
+
+1. **Enhanced Authentication**: Better Ed25519 signature implementation
+2. **Schema Validation**: Comprehensive input validation
+3. **Error Handling**: More detailed error responses
+4. **Documentation**: API usage examples and tutorials
+5. **Testing**: Unit and integration tests
+6. **Domain Support**: Additional ONDC domain implementations
+7. **Performance**: Optimization for high-volume usage
 
 ## 🏆 Recognition
 
 Contributors will be recognized in:
-- **README.md** contributors section
-- **CHANGELOG.md** for significant contributions
-- **GitHub releases** for major features
+- README.md acknowledgments
+- Release notes
+- GitHub contributors graph
+- Project documentation
 
-## ❓ Questions?
+## 📞 Getting Help
 
-- **GitHub Discussions**: For general questions
+- **GitHub Discussions**: For questions and brainstorming
 - **GitHub Issues**: For bug reports and feature requests
-- **Email**: For security-related concerns
+- **ONDC Community**: For protocol-specific questions
 
-Thank you for contributing to the ONDC ecosystem! 🙏
+## 📝 License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.
+
+---
+
+Thank you for helping make ONDC more accessible through this MCP server! 🚀
