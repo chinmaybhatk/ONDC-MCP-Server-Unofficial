@@ -8,7 +8,24 @@ A **comprehensive Model Context Protocol (MCP) server** for ONDC (Open Network f
 
 > **⚠️ Unofficial Implementation**: This is a community-driven, unofficial implementation of ONDC APIs for educational and development purposes.
 
-## 🚀 Features
+## 🚀 Quick Start
+
+```bash
+# 1. Clone and install
+git clone https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial.git
+cd ONDC-MCP-Server-Unofficial
+npm install && npm run build
+
+# 2. Configure Claude Desktop (see USAGE_GUIDE.md for details)
+# Add server config to claude_desktop_config.json
+
+# 3. Start using with Claude!
+# "Search for organic vegetables in Bangalore on ONDC network"
+```
+
+📖 **[Complete Setup Guide →](USAGE_GUIDE.md)**
+
+## 🌟 Features
 
 ### Complete API Coverage (25+ Endpoints)
 
@@ -68,6 +85,38 @@ A **comprehensive Model Context Protocol (MCP) server** for ONDC (Open Network f
 - Proper request validation and error handling
 - Digital signing for all transactions
 
+## 🎯 Natural Language Usage Examples
+
+Once set up, use Claude with natural language:
+
+### **Registry Operations**
+```
+"Register my grocery delivery app on ONDC staging environment with domain ONDC:RET10 for Bangalore operations"
+```
+
+### **Product Discovery**
+```
+"Search for organic vegetables available for delivery in Bangalore area code 560001"
+"Find electronics stores selling smartphones under ₹20,000 in Chennai"
+"Look for restaurants serving North Indian food in Delhi with home delivery"
+```
+
+### **Order Management**
+```
+"Check the status of order ORD123456 on the ONDC network"
+"Track delivery for order ORD789012"
+"Cancel order ORD345678 with reason 'customer request'"
+```
+
+### **Complete Workflows**
+```
+1. "Search for fresh fruits in Mumbai on ONDC retail network"
+2. "Select 2kg apples and 1kg oranges from seller SEL123"
+3. "Initialize order with billing address in Bandra, Mumbai"
+4. "Confirm the order with UPI payment"
+5. "Track the order delivery status"
+```
+
 ## 📦 Installation
 
 ### Prerequisites
@@ -104,7 +153,7 @@ npm run watch
 
 ## 🔧 Configuration
 
-### Environment Setup
+### ONDC Credentials Setup
 
 1. **Get ONDC Network Participant credentials:**
    - Register on the [ONDC Network Participant Portal](https://portal.ondc.org)
@@ -112,110 +161,51 @@ npm run watch
    - Submit environment access requests
    - Generate signing and encryption key pairs
 
-2. **Configure Authentication:**
-   Update the `generateAuthHeader` method in `src/index.ts` with your Ed25519 private keys.
+2. **Configure Environment:**
+   Create `.env` file with your ONDC credentials (see [USAGE_GUIDE.md](USAGE_GUIDE.md))
 
 ### Claude Desktop Integration
 
-Add this configuration to your Claude Desktop config file:
+Add to your Claude Desktop config file:
 
 ```json
 {
   "mcpServers": {
     "ondc-comprehensive": {
       "command": "node",
-      "args": ["/path/to/ONDC-MCP-Server-Unofficial/build/index.js"],
+      "args": ["/absolute/path/to/ONDC-MCP-Server-Unofficial/build/index.js"],
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "ONDC_ENVIRONMENT": "staging"
       }
     }
   }
 }
 ```
 
-## 📋 Usage Examples
+**📖 [Detailed Setup Instructions →](USAGE_GUIDE.md)**
 
-### Basic Search
-```
-"Search for organic vegetables available for delivery in Bangalore on ONDC staging environment"
-```
+## 🎮 Real-World Use Cases
 
-### Network Participant Registration
+### **E-commerce Platform Integration**
 ```
-"Register my company as a Buyer App on ONDC staging environment with domain ONDC:RET10 for grocery delivery in Mumbai"
+"Help me integrate my existing e-commerce platform with ONDC network for multi-seller marketplace"
 ```
 
-### Order Management
+### **Restaurant Chain Operations**
 ```
-"Check the status of order ORD123456 on the ONDC network"
-```
-
-### Issue Management
-```
-"Raise an issue for order ORD123456 regarding delayed delivery with category 'FULFILLMENT' and subcategory 'FLM01'"
+"Connect my restaurant chain to ONDC for food delivery across multiple cities"
 ```
 
-## 🔍 API Reference
+### **Logistics Provider Onboarding**
+```
+"Register my logistics company as a BPP on ONDC for last-mile delivery services"
+```
 
-### Registry APIs
-
-#### `ondc_subscribe`
-Register a Network Participant to ONDC registry.
-
-**Parameters:**
-- `environment`: staging/preprod/prod
-- `subscriber_id`: Your FQDN
-- `subscriber_url`: Base URL of your application
-- `type`: BAP/BPP/BG/LREG/CREG/RREG
-- `domain`: Domain code (e.g., "ONDC:RET10")
-- `city`: City code where you operate
-- `signing_public_key`: Your signing public key
-- `encryption_public_key`: Your encryption public key
-- `callback_url`: Callback URL path
-- `unique_key_id`: Unique identifier for your key pair
-
-#### `ondc_lookup`
-Lookup Network Participants in ONDC registry.
-
-**Parameters:**
-- `environment`: staging/preprod/prod
-- `type`: BAP/BPP/BG (optional)
-- `domain`: Domain to filter by (optional)
-- `city`: City code to filter by (optional)
-- `subscriber_id`: Specific subscriber to lookup (optional)
-
-### Transaction APIs
-
-All transaction APIs require:
-- `environment`: staging/preprod/prod
-- `domain`: Domain code
-- `bap_id`: Buyer App ID
-- `bap_uri`: Buyer App URI
-
-For BPP interactions, also include:
-- `bpp_id`: Seller App ID
-- `bpp_uri`: Seller App URI
-
-### Search Intent Examples
-
-```json
-{
-  "intent": {
-    "item": {
-      "descriptor": {
-        "name": "organic tomatoes"
-      }
-    },
-    "category": {
-      "descriptor": {
-        "code": "Grocery"
-      }
-    },
-    "fulfillment": {
-      "type": "Delivery"
-    }
-  }
-}
+### **Business Analytics**
+```
+"Analyze order patterns and seller performance on my ONDC-integrated marketplace"
+"Generate sales report for last month from all ONDC channels"
 ```
 
 ## 🧪 Testing
@@ -244,6 +234,13 @@ Comprehensive error handling with detailed error messages and proper HTTP status
 
 ### Request Validation
 Built-in validation for all API parameters and request bodies.
+
+## 📚 Documentation
+
+- **[Complete Usage Guide](USAGE_GUIDE.md)** - Step-by-step setup and usage
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
+- **[Examples](examples/)** - Configuration examples and scripts
+- **[Changelog](CHANGELOG.md)** - Version history
 
 ## 🤝 Contributing
 
@@ -294,6 +291,7 @@ This is an **unofficial** MCP server for ONDC APIs created for educational and d
 
 - **Issues**: [GitHub Issues](https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial/discussions)
+- **Complete Usage Guide**: [USAGE_GUIDE.md](USAGE_GUIDE.md)
 
 For ONDC-specific questions:
 - [ONDC Tech Support](mailto:techsupport@ondc.org)
