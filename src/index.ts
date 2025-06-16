@@ -8,6 +8,10 @@ import {
   Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 import crypto from 'crypto';
+import * as dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // ONDC API Configuration
 interface ONDCConfig {
@@ -22,19 +26,25 @@ interface ONDCConfig {
 const ONDC_ENDPOINTS = {
   staging: {
     registry: 'https://staging.registry.ondc.org',
-    gateway: 'https://pilot-gateway-1.beckn.nsdl.co.in',
+    gateway: 'https://staging.gateway.proteantech.in',
     publicKey: 'MCowBQYDK2VuAyEAduMuZgmtpjdCuxv+Nc49K0cB6tL/Dj3HZetvVN7ZekM='
   },
   preprod: {
-    registry: 'https://preprod.registry.ondc.org',
-    gateway: 'https://preprod.gateway.ondc.org',
+    registry: 'https://preprod.registry.ondc.org/ondc',
+    gateway: 'https://preprod.gateway.proteantech.in',
     publicKey: 'MCowBQYDK2VuAyEAa9Wbpvd9SsrpOZFcynyt/TO3x0Yrqyys4NUGIvyxX2Q='
   },
   prod: {
-    registry: 'https://prod.registry.ondc.org',
-    gateway: 'https://prod.gateway.ondc.org',
+    registry: 'https://prod.registry.ondc.org/ondc',
+    gateway: 'https://gateway.ondc.org',
     publicKey: 'MCowBQYDK2VuAyEAvVEyZY91O2yV8w8/CAwVDAnqIZDJJUPdLUUKwLo3K0M='
   }
+};
+
+// Registry API version paths
+const REGISTRY_API_PATHS = {
+  lookup: '/v2.0/lookup',
+  subscribe: '/subscribe'
 };
 
 class ONDCAPIClient {
@@ -44,14 +54,52 @@ class ONDCAPIClient {
     this.config = config;
   }
 
-  private generateAuthHeader(requestBody: any, path: string): string {
-    // Generate authentication signature for ONDC requests
-    const timestamp = new Date().toISOString();
-    const stringToSign = `${JSON.stringify(requestBody)}|${path}|${timestamp}`;
+  private async generateSignature(payload: string, privateKey: string): Promise<string> {
+    try {
+      // For now, return a placeholder. In production, use sodium-native or tweetnacl
+      // to generate proper Ed25519 signatures
+      const timestamp = Date.now();
+      const dataToSign = `(created): ${timestamp}\n(expires): ${timestamp + 300000}\ndigest: ${payload}`;
+      
+      // TODO: Implement actual Ed25519 signing
+      // const sodium = require('sodium-native');
+      // const signature = Buffer.alloc(sodium.crypto_sign_BYTES);
+      // const messageBuffer = Buffer.from(dataToSign);
+      // const privateKeyBuffer = Buffer.from(privateKey, 'base64');
+      // sodium.crypto_sign_detached(signature, messageBuffer, privateKeyBuffer);
+      // return signature.toString('base64');
+      
+      // Placeholder for now
+      console.warn("WARNING: Using placeholder signature. Real Ed25519 signing needs to be implemented.");
+      return Buffer.from(dataToSign).toString('base64');
+    } catch (error) {
+      console.error('Error generating signature:', error);
+      throw error;
+    }
+  }
+
+  private async generateAuthHeader(requestBody: any, path: string): Promise<string> {
+    const created = Math.floor(Date.now() / 1000);
+    const expires = created + 300; // 5 minutes
     
-    // In real implementation, use proper Ed25519 signing
-    // This is a placeholder for the signing logic
-    return `Signature keyId="${this.config.uniqueKeyId}",algorithm="ed25519",created="${timestamp}",expires="${new Date(Date.now() + 5 * 60 * 1000).toISOString()}",headers="(created) (expires) digest",signature="placeholder_signature"`;
+    // Create digest of the request body
+    const bodyString = JSON.stringify(requestBody);
+    const digest = crypto.createHash('sha256').update(bodyString).digest('base64');
+    
+    // Get private key from environment or config
+    const privateKey = process.env.ONDC_PRIVATE_KEY || this.config.privateKey || '';
+    
+    if (!privateKey) {
+      console.warn("WARNING: No private key configured. Authentication will fail.");
+    }
+    
+    // Generate signature
+    const signature = await this.generateSignature(bodyString, privateKey);
+    
+    // Build Authorization header
+    const keyId = `${this.config.subscriberId}|${this.config.uniqueKeyId}|ed25519`;
+    
+    return `Signature keyId="${keyId}",algorithm="ed25519",created="${created}",expires="${expires}",headers="(created) (expires) digest",signature="${signature}"`;
   }
 
   private createContext(action: string, domain: string, bap_id?: string, bap_uri?: string, bpp_id?: string, bpp_uri?: string): any {
@@ -80,7 +128,16 @@ class ONDCAPIClient {
 
   async makeRequest(endpoint: string, method: string, data?: any, useGateway: boolean = false): Promise<any> {
     const baseUrl = useGateway ? ONDC_ENDPOINTS[this.config.environment].gateway : ONDC_ENDPOINTS[this.config.environment].registry;
-    const url = `${baseUrl}${endpoint}`;
+    
+    // Handle registry API versioning
+    let fullEndpoint = endpoint;
+    if (!useGateway && endpoint === '/lookup') {
+      fullEndpoint = REGISTRY_API_PATHS.lookup;
+    } else if (!useGateway && endpoint === '/subscribe') {
+      fullEndpoint = REGISTRY_API_PATHS.subscribe;
+    }
+    
+    const url = `${baseUrl}${fullEndpoint}`;
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -88,12 +145,22 @@ class ONDCAPIClient {
       'X-Timestamp': new Date().toISOString(),
     };
 
-    if (data) {
-      headers['Authorization'] = this.generateAuthHeader(data, endpoint);
+    if (data && method !== 'GET') {
+      const authHeader = await this.generateAuthHeader(data, fullEndpoint);
+      headers['Authorization'] = authHeader;
+      
+      // Add digest header
+      const bodyString = JSON.stringify(data);
+      const digest = crypto.createHash('sha256').update(bodyString).digest('base64');
+      headers['Digest'] = `SHA-256=${digest}`;
+      
       if (useGateway) {
-        headers['X-Gateway-Authorization'] = this.generateAuthHeader(data, endpoint);
+        headers['X-Gateway-Authorization'] = authHeader;
       }
     }
+
+    console.log(`Making request to: ${url}`);
+    console.log(`Headers:`, headers);
 
     try {
       const response = await fetch(url, {
@@ -122,7 +189,7 @@ class ONDCAPIClient {
 const server = new Server(
   {
     name: "ondc-comprehensive-mcp",
-    version: "2.0.0",
+    version: "2.1.0",
   },
   {
     capabilities: {
@@ -819,13 +886,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   try {
-    // Initialize API client
+    // Initialize API client with environment variables
     const config: ONDCConfig = {
-      environment: args.environment || 'staging',
+      environment: args.environment || process.env.ONDC_ENVIRONMENT || 'staging',
       baseUrl: ONDC_ENDPOINTS[args.environment || 'staging'].registry,
       publicKey: ONDC_ENDPOINTS[args.environment || 'staging'].publicKey,
-      uniqueKeyId: args.unique_key_id || 'default-key-id',
-      subscriberId: args.bap_id || args.subscriber_id || 'default-subscriber.ondc.org'
+      privateKey: process.env.ONDC_PRIVATE_KEY,
+      uniqueKeyId: args.unique_key_id || process.env.ONDC_UNIQUE_KEY_ID || 'ed25519_01',
+      subscriberId: args.bap_id || args.subscriber_id || process.env.ONDC_SUBSCRIBER_ID || 'default-subscriber.ondc.org'
     };
 
     const apiClient = new ONDCAPIClient(config);
@@ -903,6 +971,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       switch (action) {
         case 'search':
           message = { intent: args.intent };
+          if (args.location) {
+            message.location = args.location;
+          }
           break;
         case 'select':
         case 'init':
@@ -1020,7 +1091,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("ONDC Comprehensive MCP Server running on stdio");
+  console.error("ONDC Comprehensive MCP Server v2.1.0 running on stdio");
+  console.error("Environment:", process.env.ONDC_ENVIRONMENT || 'staging');
+  console.error("URLs configured:", ONDC_ENDPOINTS[process.env.ONDC_ENVIRONMENT || 'staging']);
 }
 
 main().catch((error) => {

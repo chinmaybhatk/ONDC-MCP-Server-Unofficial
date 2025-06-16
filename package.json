@@ -1,6 +1,6 @@
 {
   "name": "ondc-comprehensive-mcp-server",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Comprehensive Model Context Protocol server for ONDC (Open Network for Digital Commerce) APIs with complete Beckn protocol compliance",
   "main": "build/index.js",
   "type": "module",
@@ -40,7 +40,8 @@
   "homepage": "https://github.com/chinmaybhatk/ONDC-MCP-Server-Unofficial#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
