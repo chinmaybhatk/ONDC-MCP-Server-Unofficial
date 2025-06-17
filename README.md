@@ -8,6 +8,12 @@ A **comprehensive Model Context Protocol (MCP) server** for ONDC (Open Network f
 
 > **⚠️ Unofficial Implementation**: This is a community-driven, unofficial implementation of ONDC APIs for educational and development purposes.
 
+## 👤 Author
+
+**Primary Author**: [walue.biz](https://walue.biz)
+
+For detailed author and contributor information, see [AUTHORS.md](AUTHORS.md).
+
 ## 🚀 Quick Start
 
 ```bash
@@ -284,6 +290,7 @@ Built-in validation for all API parameters and request bodies.
 
 - **[Complete Usage Guide](USAGE_GUIDE.md)** - Step-by-step setup and usage
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
+- **[Authors & Contributors](AUTHORS.md)** - Project contributors
 - **[Examples](examples/)** - Configuration examples and scripts
 - **[Changelog](CHANGELOG.md)** - Version history
 
@@ -344,6 +351,6 @@ For ONDC-specific questions:
 
 ---
 
-**Made with ❤️ by the ONDC Community**
+**Made with ❤️ by [walue.biz](https://walue.biz) and the ONDC Community**
 
 *Star ⭐ this repository if you find it helpful!*
