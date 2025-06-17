@@ -28,7 +28,10 @@
     "financial-services",
     "model-context-protocol"
   ],
-  "author": "ONDC Community (Unofficial)",
+  "author": "walue.biz",
+  "contributors": [
+    "ONDC Community (Unofficial)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
